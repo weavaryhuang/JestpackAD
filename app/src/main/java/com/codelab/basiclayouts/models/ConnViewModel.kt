@@ -14,7 +14,7 @@ class ConnViewModel(string1: String): ViewModel() {
 //    var myd = context.getSharedPreferences("DataBase",Context.MODE_PRIVATE)
 
     //val code = string1
-    val code = "darkfromdawn.com"
+    val code = "10.165.71.10"
     //val url_source = "http://$code/rest/"
     val url_source = "http://$code/rest/"
 
@@ -43,17 +43,23 @@ class ConnViewModel(string1: String): ViewModel() {
         val column1: String = string1
         val column2: String = string2
         var check: Int
-
         Log.d("InViewmodel", url.toString())
+        Log.d("InViewmodel", column1)
+
+
+//        Log.d("InViewmodel", url.toString())
 
         withContext(Dispatchers.IO){
             val conn: HttpURLConnection = url.openConnection() as HttpURLConnection
             val postData = "uname=" + column1 + "&" + "status=" + column2
+            Log.d("InViewmodel", postData)
 
             conn.requestMethod = "POST"
             conn.doOutput = true
+
             conn.connectTimeout = 1000
             conn.doInput = true
+
 //            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
 //            conn.setRequestProperty("Content-Length", postData.length.toString())
 
@@ -62,13 +68,15 @@ class ConnViewModel(string1: String): ViewModel() {
             }
 
             check = conn.responseCode
+            Log.d("InViewmodel", conn.responseMessage)
+
             conn.inputStream.bufferedReader().use {
                 content = it.readText()
             }
 
             Log.d("InViewmodel", content)
         }
-
+        Log.d("123", check.toString())
         val result = if (check == 200) content else "Not working"
         return result
     }
