@@ -1,9 +1,11 @@
 package com.codelab.basiclayouts
 
-import android.content.Intent
+import android.app.Application
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.NonNull
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,11 +39,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModelProvider
+import com.codelab.basiclayouts.models.MyData
 import com.codelab.basiclayouts.ui.theme.MySootheTheme
 
 class MainActivity : ComponentActivity() {
+//    private lateinit var myData: MyData
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+//        myData = ViewModelProvider.AndroidViewModelFactory(this.application).create(MyData::class.java)
+//        myData.context = this.applicationContext
+
         setContent { LoginApp() }
     }
 }
@@ -64,13 +72,17 @@ private fun TitleBar(
 
 @Composable
 fun LoginPage(modifier: Modifier = Modifier) {
+
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val context = LocalContext.current
+        val myd = context.getSharedPreferences("DataBase", Context.MODE_PRIVATE)
+        val editor = myd.edit()
         val username = remember { mutableStateOf(TextFieldValue()) }
         val password = remember { mutableStateOf(TextFieldValue()) }
+        val ttt = remember { mutableStateOf(TextFieldValue()) }
 
         Text(text = "Login", style = TextStyle(fontSize = 40.sp))
 
@@ -78,6 +90,7 @@ fun LoginPage(modifier: Modifier = Modifier) {
         TextField(
             label = { Text(text = "Username") },
             value = username.value,
+            placeholder = { Text(text = "Enter User name")},
             onValueChange = { username.value = it })
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -86,13 +99,34 @@ fun LoginPage(modifier: Modifier = Modifier) {
             value = password.value,
             visualTransformation = PasswordVisualTransformation(),
             //keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            placeholder = { Text(text = "Enter Passwords")},
             onValueChange = { password.value = it })
 
         Spacer(modifier = Modifier.height(35.dp))
+
+        TextField(
+            readOnly = true,
+            value = ttt.value,
+//            visualTransformation = PasswordVisualTransformation(),
+            //keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+//            placeholder = { Text(text = "Enter Passwords")},
+            onValueChange = { })
+
+        Spacer(modifier = Modifier.height(35.dp))
+//        myData = ViewModelProvider.AndroidViewModelFactory().create(MyData::class.java)
+
         Box(modifier = modifier) {
             Button(
                 onClick = {
-                    context.startActivity(Intent(context, Page1::class.java)) },
+
+                    editor.putString("username", username.value.text)
+                    editor.putString("passwords", password.value.text)
+                    editor.apply()
+//                    editor.remove("").commit()
+
+                    ttt.value = username.value },
+//                    context.startActivity(Intent(context, Page1::class.java)) },
+
                 shape = RoundedCornerShape(20.dp),
                 modifier = Modifier
                     .width(150.dp)

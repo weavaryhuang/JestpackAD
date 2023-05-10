@@ -3,6 +3,7 @@ package com.codelab.basiclayouts.models
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.codelab.basiclayouts.R
@@ -39,8 +40,8 @@ class MyData(application: Application) : AndroidViewModel(application) {
         resultsLD.value = stringEdit1
     }
 
-    fun setPosition(stringEdit1: String){
-        positionLD.value = stringEdit1
+    fun setPosition(stringEdit1: TextFieldValue){
+        positionLD.value = stringEdit1.toString()
     }
 
     fun getuserIDString(): MutableLiveData<String> { return user_idLD }
