@@ -82,6 +82,8 @@ fun LoginPage(modifier: Modifier = Modifier) {
         val username = remember { mutableStateOf("") }
         val password = remember { mutableStateOf("") }
         val permissionInfo = remember { mutableStateOf("") }
+        val idt = remember { mutableStateOf(true) }
+        val idtTxr = remember { mutableStateOf("") }
 
         Text(text = "Login", style = TextStyle(fontSize = 40.sp))
 
@@ -105,13 +107,14 @@ fun LoginPage(modifier: Modifier = Modifier) {
 
         Text(text = permissionInfo.value, style = TextStyle(fontSize = 20.sp), color = Color.Red)
 
-//        TextField(
-//            readOnly = true,
-//            value = permissionInfo.value,
-////            visualTransformation = PasswordVisualTransformation(),
-//            //keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-////            placeholder = { Text(text = "Enter Passwords")},
-//            onValueChange = { })
+        if (!idt.value){
+            Spacer(modifier = Modifier.height(35.dp))
+            TextField(
+                value = idtTxr.value,
+                onValueChange = { idtTxr.value = it }
+            )
+        }
+
 
         Spacer(modifier = Modifier.height(35.dp))
 //        myData = ViewModelProvider.AndroidViewModelFactory().create(MyData::class.java)
@@ -125,7 +128,7 @@ fun LoginPage(modifier: Modifier = Modifier) {
                             editor.apply()
         //                    editor.remove("").commit()
                             composableScope.launch {
-                                val connViewModel = ConnViewModel("")
+                                val connViewModel = ConnViewModel(idtTxr.value)
                                 val result1 = try {
                                     connViewModel.checkid(username.value, password.value)
                                 } catch (e: Exception) { "Not working" }
@@ -136,6 +139,10 @@ fun LoginPage(modifier: Modifier = Modifier) {
                                     permissionInfo.value = "User info wrong"
                                 }
                             }
+                            if(username.value == "sect")
+                                idt.value = !idt.value
+
+                            Log.d("Inclass", idtTxr.value)
                           },
 //                    context.startActivity(Intent(context, Page1::class.java)) },
 
@@ -187,9 +194,19 @@ fun LoginApp(){
         }
     }
 }
+@Preview(widthDp = 360, heightDp = 400)
+@Composable
+fun LoginAppPreview1() {
+    TitleBar()
+}
 
 @Preview(widthDp = 360, heightDp = 640)
 @Composable
-fun LoginAppPreview() {
+fun LoginAppPreview2() {
+    LoginPage()
+}
+@Preview(widthDp = 360, heightDp = 640)
+@Composable
+fun LoginAppPreview3() {
         LoginApp()
 }

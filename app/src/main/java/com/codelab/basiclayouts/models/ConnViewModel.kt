@@ -13,8 +13,9 @@ class ConnViewModel(string1: String): ViewModel() {
 
 //    var myd = context.getSharedPreferences("DataBase",Context.MODE_PRIVATE)
 
-    //val code = string1
-    val code = "192.168.0.80"
+    val code = string1
+//    val code = "darkfromdawn.com"
+//    val code = "10.165.71.10"
     //val url_source = "http://$code/rest/"
     val url_source = "http://$code/rest/"
 
